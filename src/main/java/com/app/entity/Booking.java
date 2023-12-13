@@ -12,11 +12,17 @@ import lombok.*;
 @Getter
 @Setter
 public class Booking extends BaseEntity {
+
     private String note;
+
     private Integer adult;
+
     private Integer children;
+
     private Integer baby;
+
     private String qr;
+
     private EBooking status;
 
     @ManyToOne

@@ -1,11 +1,11 @@
 package com.app.service.serviceImpl;
 
-import com.app.dto.AccountData;
 import com.app.entity.Account;
 import com.app.entity.Blog;
+import com.app.modal.BlogModal;
+import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.response.APIResponse;
-import com.app.payload.response.CloudinaryResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
 import com.app.repository.AccountRepository;
@@ -13,10 +13,10 @@ import com.app.repository.BlogInteractionResponsitory;
 import com.app.repository.BlogRepository;
 import com.app.security.TokenProvider;
 import com.app.service.BlogServices;
+import com.app.speficication.BlogModalSpecification;
 import com.app.speficication.BlogSpecification;
 import com.app.utils.PageUtils;
 import com.app.utils.RequestParamsUtils;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +38,9 @@ public class BlogServicesImpl implements BlogServices {
     @Autowired
     BlogSpecification blogSpecification;
     @Autowired
+    BlogModalSpecification blogModalSpecification;
+    @Autowired
     TokenProvider tokenProvider;
-
     @Autowired
     AccountRepository accountRepository;
     @Autowired
@@ -48,6 +49,7 @@ public class BlogServicesImpl implements BlogServices {
     CloudinaryService cloudinaryService;
     @Autowired
     ImportExcelService importExcelService;
+    private Specification<BlogModal> spec;
 
     @Override
     public List<Blog> findAll() {
@@ -57,6 +59,14 @@ public class BlogServicesImpl implements BlogServices {
     @Override
     public Optional<Blog> findById(Integer id) {
         return blogRepository.findById(id);
+    }
+
+    @Override
+    public APIResponse getAllBlogWithAccount(BlogModalQueryParam blogModalQueryParam){
+        Specification<BlogModal> spec = blogModalSpecification.getBlogModalSpecification(blogModalQueryParam);
+        Pageable pageable = requestParamsUtils.getPageable(blogModalQueryParam);
+        Page<BlogModal> response = blogRepository.getAllBlogWithAccount(spec, pageable);
+        return new APIResponse(PageUtils.toPageResponse(response));
     }
 
     @Override
@@ -87,7 +97,7 @@ public class BlogServicesImpl implements BlogServices {
     public APIResponse create(Blog blog, HttpServletRequest request) {
         String token = getTokenFromHeader(request);
         int id = tokenProvider.getIdFromToken(token);
-        Account account =  accountRepository.findById(id).orElse(null);
+        Account account = accountRepository.findById(id).orElse(null);
         try {
             if (blog.getTitle() == null || blog.getTitle().trim().isEmpty()) {
                 throw new IllegalArgumentException("Blog title cannot be empty");

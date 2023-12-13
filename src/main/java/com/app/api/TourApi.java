@@ -15,21 +15,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class TourApi {
+
     @Autowired
     TourServices tourServices;
-// get name atv  id  all review òf tour, tour deteil, get theo tinh
+
     @GetMapping("/public/tours")
     public ResponseEntity<?> filter(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterTour(tourQueryParam));
     }
+
     @GetMapping("/public/tours/findById")
     public ResponseEntity<?> findById(@RequestParam("id") Integer id) {
         return ResponseEntity.ok(tourServices.findbyid(id));
     }
+
     @GetMapping("/public/tours/getAccount")
     public ResponseEntity<?> getAccount(@RequestParam("id") Integer id, TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.getAccountByTourId(id, tourQueryParam));
     }
+
     @GetMapping("/public/tours/nullDiscount")
     public ResponseEntity<?> filterTourDiscount(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterTourDiscount(tourQueryParam));
@@ -39,6 +43,7 @@ public class TourApi {
     public ResponseEntity<?> filterNewlyPosted(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterNewlyPosted(tourQueryParam));
     }
+
     @PostMapping("/company/tours")
     public ResponseEntity<?> createTour(@RequestPart(name = "tour") Tour tour) {
         APIResponse response = tourServices.create(tour);
@@ -46,8 +51,7 @@ public class TourApi {
     }
 
     @PutMapping("/company/tours")
-    public ResponseEntity<?> updateTour(@RequestPart(name = "tour") Tour tour
-                                     ) {
+    public ResponseEntity<?> updateTour(@RequestPart(name = "tour") Tour tour) {
         APIResponse response = tourServices.update(tour);
         return ResponseEntity.ok().body(response);
     }
@@ -63,9 +67,25 @@ public class TourApi {
         APIResponse response = tourServices.uploadExcel(excel);
         return ResponseEntity.ok().body(response);
     }
+
     @PostMapping("/company/tours/batch")
     public ResponseEntity<?> createToursBatch(@RequestBody List<Tour> tours) {
         APIResponse response = tourServices.createBatch(tours);
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping("/public/tours/getRevenue")
+    public ResponseEntity<?> getRevenueTour(@RequestParam("id") String id) {
+        try {
+            int tourId = Integer.parseInt(id);
+            if (tourId < 0) {
+                return ResponseEntity.badRequest().body("Invalid tour id");
+            }
+            APIResponse response = tourServices.getRevenueTour(tourId);
+            return ResponseEntity.ok().body(response);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body("Invalid tour id");
+        }
+    }
+
 }

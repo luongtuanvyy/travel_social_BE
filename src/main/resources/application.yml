@@ -7,3 +7,5 @@ spring:
 
 #    active: local
 #    include: common, local
+  devtools:
+    add-properties: false

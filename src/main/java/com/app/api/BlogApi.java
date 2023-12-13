@@ -1,20 +1,28 @@
 package com.app.api;
 
-import com.app.entity.Blog;
-import com.app.entity.Voucher;
-import com.app.payload.request.BlogQueryParam;
-import com.app.payload.request.TourQueryParam;
-import com.app.payload.response.APIResponse;
-import com.app.service.BlogServices;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.app.payload.request.BlogModalQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import com.app.entity.Blog;
+import com.app.payload.request.BlogQueryParam;
+import com.app.payload.response.APIResponse;
+import com.app.service.BlogServices;
 
 @RestController
 @RequestMapping("/api")
@@ -27,9 +35,14 @@ public class BlogApi {
         return ResponseEntity.ok(blogServices.getAccountByBlogId(id, blogQueryParam));
     }
 
+//    @GetMapping("/public/blogs")
+//    public ResponseEntity<?> getAllBlog(BlogQueryParam blogQueryParam) {
+//        return ResponseEntity.ok(blogServices.filterBlog(blogQueryParam));
+//    }
+
     @GetMapping("/public/blogs")
-    public ResponseEntity<?> getAllBlog(BlogQueryParam blogQueryParam) {
-        return ResponseEntity.ok(blogServices.filterBlog(blogQueryParam));
+    public ResponseEntity<?> getAllBlog(BlogModalQueryParam blogModalQueryParam) {
+        return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
     }
 
     @GetMapping("/public/blogs/notSeen")
@@ -44,14 +57,14 @@ public class BlogApi {
 
     @PostMapping("/user/blogs")
     public ResponseEntity<?> createBlog(@RequestPart(name = "blog") Blog blog,
-            HttpServletRequest request) {
+                                        HttpServletRequest request) {
         APIResponse response = blogServices.create(blog, request);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/user/blogs")
     public ResponseEntity<?> updateBlog(@RequestPart(name = "blog") Blog blog,
-            HttpServletRequest request) {
+                                        HttpServletRequest request) {
         APIResponse response = blogServices.update(blog, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
