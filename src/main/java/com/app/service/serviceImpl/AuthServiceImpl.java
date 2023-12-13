@@ -68,9 +68,10 @@ public class AuthServiceImpl implements AuthService {
             String token = tokenProvider.generateToken(acc);
             AccountDto accDto = accountMapper.accountDto(acc);
             Integer id = acc.getId();
-            accDto.setTotalBlog(blogRepository.countByCreatedBy(acc.getEmail()));
-            accDto.setTotalLike(likeRepository.countByAccountId(id));
-            accDto.setTotalFollow(followRepository.countByAccountId(id));
+//
+//            accDto.setTotalBlog(blogRepository.countByCreatedBy(acc.getEmail()));
+//            accDto.setTotalLike(likeRepository.countByAccountId(id));
+//            accDto.setTotalFollow(followRepository.countByAccountId(id));
             AuthResponse authResponse = new AuthResponse(token, accDto);
             return  APIResponse.builder().message("Success").success(true).data(authResponse).build();
         }catch (Exception ex){

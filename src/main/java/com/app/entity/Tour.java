@@ -50,9 +50,9 @@ public class Tour extends BaseEntity {
     @JoinColumn(name = "TOUR_GUIDE_ID", referencedColumnName = "ID")
     private TourGuide tourGuideId;
 
-    @ManyToOne
-    @JoinColumn(name = "TOUR_TEMPLATE_ID", referencedColumnName = "ID")
-    private TourTemplate tourTemplateId;
+//    @ManyToOne
+//    @JoinColumn(name = "TOUR_TEMPLATE_ID", referencedColumnName = "ID")
+//    private TourTemplate tourTemplateId;
 
 
 //    @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER)

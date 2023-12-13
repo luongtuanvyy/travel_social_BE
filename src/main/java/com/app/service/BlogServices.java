@@ -1,9 +1,9 @@
 package com.app.service;
 
 import com.app.entity.Blog;
-import com.app.entity.Voucher;
+import com.app.modal.BlogModal;
+import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
-import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface BlogServices {
     List<Blog> findAll();
     Optional<Blog> findById(Integer id);
+
+    APIResponse getAllBlogWithAccount(BlogModalQueryParam blogModalQueryParam);
 
     APIResponse filterBlog(BlogQueryParam blogQueryParam);
 

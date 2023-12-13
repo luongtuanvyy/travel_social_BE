@@ -24,7 +24,6 @@ public class TourSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("vehicle"),  "%"+vehicle+"%");
     }
 
-
     public Specification<Tour> hasNameLike(String name) {
         return (Root<Tour> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             String nameWithoutDiacritics = removeDiacritics(name);
@@ -86,8 +85,6 @@ public class TourSpecification {
         if (tourQueryParam.getStart_date() != null) {
             spec = spec.and(startDateGreaterThanOrEqualTo(tourQueryParam.getStart_date()));
         }
-
-
             return spec;
     }
 }
